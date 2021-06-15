@@ -1,0 +1,10 @@
+version: '3'
+services:
+    ms-sql-server:
+        image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+        environment:
+            ACCEPT_EULA: "Y"
+            SA_PASSWORD: "dolphin7!"
+            MSSQL_PID: Express
+        ports:
+        - "1432:1433"
