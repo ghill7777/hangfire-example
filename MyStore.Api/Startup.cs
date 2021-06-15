@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -44,6 +45,7 @@ namespace MyStore.Api
             services.AddTransient<IOrderConfirmation, OrderConfirmation>();
             services.AddTransient<IOrderProcessor, OrderProcessor>();
             services.AddTransient<IPrintingService, PrintingService>();
+            services.AddTransient<HttpClient>();
             services.AddDbContext<StoreDbContext>(builder => builder.UseSqlServer("server=.,1432;uid=sa;pwd=dolphin7!;database=MyStore",
                 b => b.MigrationsAssembly("MyStore.Api")));
         }
