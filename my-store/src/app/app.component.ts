@@ -11,6 +11,7 @@ export class AppComponent {
   isBusy = false;
   orderPlaced = false;
   orderNumber = '';
+  isError = false;
 
   /**
    *
@@ -28,12 +29,18 @@ export class AppComponent {
     this.isBusy = true;
     this.orderPlaced = false;
     this.orderNumber = "";
+    this.isError = false;
     this.client.post("https://localhost:5001/api/v1/orders", order)
       .subscribe((data: any) => {
         console.log(data);
         this.isBusy = false;
         this.orderPlaced = true;
         this.orderNumber = data.id.toString();
+        this.isError = false;
+      }, err => {
+        this.isError = true;
+        this.isBusy = false;
+        this.orderPlaced = false;
       });
   }
 }

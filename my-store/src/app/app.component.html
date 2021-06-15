@@ -44,6 +44,9 @@
       <div *ngIf="orderPlaced" class="mt-2" style="font-size: larger; font-weight: bold;">
         Thank you for your order! Order #{{orderNumber}}
       </div>
+      <div *ngIf="isError" class="mt-2" style="font-size: larger; color: red;">
+        There was an error!
+      </div>
     </div>
   </div>
 </main>
