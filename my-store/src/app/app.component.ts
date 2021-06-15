@@ -9,6 +9,8 @@ import { HttpClient } from "@angular/common/http";
 export class AppComponent {
   title = 'my-store';
   isBusy = false;
+  orderPlaced = false;
+  orderNumber = '';
 
   /**
    *
@@ -24,10 +26,14 @@ export class AppComponent {
       items: "batteries,toothpaste,soap"
     };
     this.isBusy = true;
+    this.orderPlaced = false;
+    this.orderNumber = "";
     this.client.post("https://localhost:5001/api/v1/orders", order)
-      .subscribe(data => {
+      .subscribe((data: any) => {
         console.log(data);
         this.isBusy = false;
+        this.orderPlaced = true;
+        this.orderNumber = data.id.toString();
       });
   }
 }

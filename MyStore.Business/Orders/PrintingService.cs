@@ -21,7 +21,7 @@ namespace MyStore.Business.Orders
 
         public async Task Print(Order order)
         {
-            var latency = Random.Next(1, 5);
+            var latency = Random.Next(3, 5);
             Thread.Sleep(latency * 1000);
             var dbOrder = await _db.Orders.FirstAsync(c => c.Id == order.Id);
             dbOrder.PrintDate = DateTime.UtcNow;

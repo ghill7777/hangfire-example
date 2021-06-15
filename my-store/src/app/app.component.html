@@ -34,11 +34,15 @@
   <div class="px-4 py-5 my-5 text-center">
     <h1 class="display-5 fw-bold">Hangfire Example<br />Fictitious Order System</h1>
     <div class="col-lg-6 mx-auto">
-      <p class="lead mb-4">Simulate an order being placed by a customer that requires the customer to receive a
+      <p class="lead mb-4">Simulate an order being placed by a customer that requires the order to be printed and the
+        customer to receive a
         confirmation email.</p>
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
         <button type="button" class="btn btn-primary btn-lg px-4 gap-3" (click)="orderClick()">{{ isBusy ? 'Processing'
           : 'Place Order' }}</button>
+      </div>
+      <div *ngIf="orderPlaced" class="mt-2" style="font-size: larger; font-weight: bold;">
+        Thank you for your order! Order #{{orderNumber}}
       </div>
     </div>
   </div>

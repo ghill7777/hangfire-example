@@ -8,7 +8,7 @@ using MyStore.Business.Data.Entities;
 
 namespace MyStore.Business.Orders
 {
-    public class OrderConfirmation : IOrderConfirmation 
+    public class OrderConfirmation : IOrderConfirmation
     {
         private static Random _random;
         private static Random Random => _random ??= new Random(DateTime.Now.Millisecond);
@@ -21,7 +21,7 @@ namespace MyStore.Business.Orders
 
         public async Task Confirm(Order order)
         {
-            var latency = Random.Next(1, 5);
+            var latency = Random.Next(3, 5);
             Thread.Sleep(latency * 1000);
             var dbOrder = await _db.Orders.FirstAsync(c => c.Id == order.Id);
             dbOrder.ConfirmationDate = DateTime.UtcNow;
