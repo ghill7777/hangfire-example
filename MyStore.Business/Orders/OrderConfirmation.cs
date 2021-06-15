@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using MyStore.Business.Data;
 using MyStore.Business.Data.Entities;
 
 namespace MyStore.Business.Orders
@@ -9,14 +12,20 @@ namespace MyStore.Business.Orders
     {
         private static Random _random;
         private static Random Random => _random ??= new Random(DateTime.Now.Millisecond);
+        private readonly StoreDbContext _db;
+
+        public OrderConfirmation(StoreDbContext db)
+        {
+            _db = db ?? throw new ArgumentNullException(nameof(db));
+        }
 
         public async Task Confirm(Order order)
         {
-            await Task.Run(() =>
-            {
-                var latency = Random.Next(1, 5);
-                Thread.Sleep(latency * 1000);
-            });
+            var latency = Random.Next(1, 5);
+            Thread.Sleep(latency * 1000);
+            var dbOrder = await _db.Orders.FirstAsync(c => c.Id == order.Id);
+            dbOrder.ConfirmationDate = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
         }
     }
 

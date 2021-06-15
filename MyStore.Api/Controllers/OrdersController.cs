@@ -26,10 +26,10 @@ namespace MyStore.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Order model)
         {
-            await _orderProcessor.Process(model);
-            await _printingService.Print(model);
-            await _orderConfirmation.Confirm(model);
-            return Created(Request.Path + $"/{model.Id}", model);
+            var order = await _orderProcessor.Process(model);
+            await _printingService.Print(order);
+            await _orderConfirmation.Confirm(order);
+            return Created(Request.Path + $"/{order.Id}", order);
         }
     }
 }
