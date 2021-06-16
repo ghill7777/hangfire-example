@@ -12,7 +12,7 @@ export class AppComponent {
   orderPlaced = false;
   orderNumber = '';
   isError = false;
-
+  product = '';
   /**
    *
    */
@@ -21,10 +21,11 @@ export class AppComponent {
   }
 
   async orderClick(): Promise<void> {
+    const theProduct = this.product.length > 0 ? this.product : "batteries,toothpaste,soap";
     const order = {
       customerName: "Greg",
       email: "ghill@keefegroup.com",
-      items: "batteries,toothpaste,soap"
+      items: theProduct
     };
     this.isBusy = true;
     this.orderPlaced = false;
@@ -37,6 +38,7 @@ export class AppComponent {
         this.orderPlaced = true;
         this.orderNumber = data.id.toString();
         this.isError = false;
+        this.product = "";
       }, err => {
         this.isError = true;
         this.isBusy = false;
