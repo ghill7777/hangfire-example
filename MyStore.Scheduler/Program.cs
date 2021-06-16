@@ -16,7 +16,6 @@ namespace MyStore.Scheduler
 
             ConfigureHangfire();
             RunHangfireServer();
-            // ArchiveOrders();
         }
 
         private static void RunHangfireServer()
