@@ -37,6 +37,11 @@
       <p class="lead mb-4">Simulate an order being placed by a customer that requires the order to be printed and the
         customer to receive a
         confirmation email.</p>
+      <div class="mb-5">
+        <span>Product: </span>
+        <input [(ngModel)]="product" type="text" class="form-control"
+          placeholder="Defaults to batteries,toothpaste,soap..." />
+      </div>
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
         <button type="button" class="btn btn-primary btn-lg px-4 gap-3" (click)="orderClick()">{{ isBusy ? 'Processing'
           : 'Place Order' }}</button>
