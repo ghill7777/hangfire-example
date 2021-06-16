@@ -17,7 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MyStore.Business\MyStore.Business.csproj" />
+    <ProjectReference Include="..\MyStore.Business\MyStore.Business.csproj">
+      <Private>true</Private>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

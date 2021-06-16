@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Http;
 using Microsoft.EntityFrameworkCore;
 using MyStore.Business.Data;
 using Microsoft.Extensions.DependencyInjection;
 using MyStore.Business.Data.Entities;
 using Hangfire;
 using Hangfire.SqlServer;
+using MyStore.Business.Orders;
 
 namespace MyStore.Scheduler
 {
@@ -75,7 +77,9 @@ namespace MyStore.Scheduler
                     UseRecommendedIsolationLevel = true,
                     UsePageLocksOnDequeue = true,
                     DisableGlobalLocks = true
-                });
+                })
+                .UseActivator(new MyJobActivator(SetupServiceProvider()))
+                ;
             RecurringJob.AddOrUpdate("ArchiveOrders", () => ArchiveOrders(), Cron.Minutely);
         }
 
@@ -85,6 +89,10 @@ namespace MyStore.Scheduler
 
             var services = new ServiceCollection();
             services.AddDbContext<StoreDbContext>(builder => builder.UseSqlServer(storeConnectionString));
+            services.AddTransient<IOrderProcessor, OrderProcessor>().AddTransient<OrderProcessor>();
+            services.AddTransient<IOrderConfirmation, OrderConfirmation>().AddTransient<OrderConfirmation>();
+            services.AddTransient<IPrintingService, PrintingService>().AddTransient<PrintingService>();
+            services.AddTransient<HttpClient>();
             var provider = services.BuildServiceProvider();
             return provider;
         }
@@ -92,6 +100,22 @@ namespace MyStore.Scheduler
         private static void Log(string message)
         {
             Console.WriteLine(message);
+        }
+    }
+
+    public class MyJobActivator : JobActivator
+    {
+        private readonly IServiceProvider _provider;
+
+        public MyJobActivator(IServiceProvider provider)
+        {
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+        }
+
+        public override object ActivateJob(Type jobType)
+        {
+            Console.WriteLine($"Activating type: {jobType.Name}");
+            return _provider.GetService(jobType);
         }
     }
 }
