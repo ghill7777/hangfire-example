@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using MyStore.Business.Data;
 using Microsoft.Extensions.DependencyInjection;
 using MyStore.Business.Data.Entities;
+using Hangfire;
+using Hangfire.SqlServer;
 
 namespace MyStore.Scheduler
 {
@@ -12,7 +14,18 @@ namespace MyStore.Scheduler
         static void Main(string[] args)
         {
             var provider = SetupServiceProvider();
-            ArchiveOrders(provider);
+            ConfigureHangfire();
+            RunHangfireServer();
+            // ArchiveOrders(provider);
+        }
+
+        private static void RunHangfireServer()
+        {
+            Log("Hangfire server running...");
+            using (var server = new BackgroundJobServer())
+            {
+                Console.ReadLine();
+            }
         }
 
         private static void ArchiveOrders(IServiceProvider provider)
@@ -44,13 +57,37 @@ namespace MyStore.Scheduler
             }
         }
 
+        private static void ConfigureHangfire()
+        {
+            const string hangfireConnectionString = "server=.,1431;uid=sa;pwd=lionsNeverSleep9@;database=Hangfire;";
+            GlobalConfiguration.Configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(hangfireConnectionString, new SqlServerStorageOptions
+                {
+                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                    QueuePollInterval = TimeSpan.Zero,
+                    UseRecommendedIsolationLevel = true,
+                    UsePageLocksOnDequeue = true,
+                    DisableGlobalLocks = true
+                });
+        }
+
         private static IServiceProvider SetupServiceProvider()
         {
-            const string connectionString = "server=.,1432;uid=sa;pwd=dolphin7!;database=MyStore;";
+            const string storeConnectionString = "server=.,1432;uid=sa;pwd=dolphin7!;database=MyStore;";
+
             var services = new ServiceCollection();
-            services.AddDbContext<StoreDbContext>(builder => builder.UseSqlServer(connectionString));
+            services.AddDbContext<StoreDbContext>(builder => builder.UseSqlServer(storeConnectionString));
             var provider = services.BuildServiceProvider();
             return provider;
+        }
+
+        private static void Log(string message)
+        {
+            Console.WriteLine(message);
         }
     }
 }
