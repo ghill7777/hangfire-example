@@ -13,10 +13,10 @@ namespace MyStore.Scheduler
     {
         static void Main(string[] args)
         {
-            var provider = SetupServiceProvider();
+
             ConfigureHangfire();
             RunHangfireServer();
-            // ArchiveOrders(provider);
+            // ArchiveOrders();
         }
 
         private static void RunHangfireServer()
@@ -28,8 +28,10 @@ namespace MyStore.Scheduler
             }
         }
 
-        private static void ArchiveOrders(IServiceProvider provider)
+        public static void ArchiveOrders()
         {
+            Log("Started ArchiveOrders...");
+            var provider = SetupServiceProvider();
             using var scope = provider.CreateScope();
             var context = scope.ServiceProvider.GetService<StoreDbContext>();
             if (context == null) throw new Exception("Unable to resolve dbcontext.");
@@ -55,6 +57,8 @@ namespace MyStore.Scheduler
                 context.Orders.Remove(order);
                 context.SaveChanges();
             }
+
+            Log("Ended ArchiveOrders...");
         }
 
         private static void ConfigureHangfire()
@@ -73,6 +77,7 @@ namespace MyStore.Scheduler
                     UsePageLocksOnDequeue = true,
                     DisableGlobalLocks = true
                 });
+            RecurringJob.AddOrUpdate("ArchiveOrders", () => ArchiveOrders(), Cron.Minutely);
         }
 
         private static IServiceProvider SetupServiceProvider()
