@@ -11,12 +11,13 @@ namespace MyStore.Scheduler
     {
         static void Main(string[] args)
         {
-            var provider = SetupServiceProvider();
-            ArchiveOrders(provider);
+
+            ArchiveOrders();
         }
 
-        private static void ArchiveOrders(IServiceProvider provider)
+        private static void ArchiveOrders()
         {
+            var provider = SetupServiceProvider();
             using var scope = provider.CreateScope();
             var context = scope.ServiceProvider.GetService<StoreDbContext>();
             if (context == null) throw new Exception("Unable to resolve dbcontext.");
