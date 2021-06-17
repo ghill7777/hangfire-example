@@ -15,7 +15,6 @@ namespace MyStore.Scheduler
     {
         static void Main(string[] args)
         {
-
             ConfigureHangfire();
             RunHangfireServer();
         }
