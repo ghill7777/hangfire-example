@@ -27,8 +27,11 @@ namespace MyStore.Business.Orders
         {
             var latency = Random.Next(3, 5);
             Thread.Sleep(latency * 1000);
+
+            var randomEmail = await GetRandomEmail();
+
             var dbOrder = await _db.Orders.FirstAsync(c => c.Id == order.Id);
-            dbOrder.Email = await GetRandomEmail();
+            dbOrder.Email = randomEmail;
             dbOrder.ConfirmationDate = DateTime.UtcNow;
             await _db.SaveChangesAsync();
         }

@@ -15,6 +15,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MyStore.Business.Data;
 using MyStore.Business.Orders;
+using Hangfire;
+using Hangfire.SqlServer;
+using Hangfire.Storage;
 
 namespace MyStore.Api
 {
@@ -48,6 +51,7 @@ namespace MyStore.Api
             services.AddTransient<HttpClient>();
             services.AddDbContext<StoreDbContext>(builder => builder.UseSqlServer("server=.,1432;uid=sa;pwd=dolphin7!;database=MyStore",
                 b => b.MigrationsAssembly("MyStore.Api")));
+            JobStorage.Current = new SqlServerStorage("server=.,1431;uid=sa;pwd=lionsNeverSleep9@;database=Hangfire;");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

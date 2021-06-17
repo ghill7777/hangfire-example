@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using MyStore.Business.Data.Entities;
 using MyStore.Business.Orders;
@@ -27,8 +28,9 @@ namespace MyStore.Api.Controllers
         public async Task<IActionResult> Post([FromBody] Order model)
         {
             var order = await _orderProcessor.Process(model);
-            await _printingService.Print(order);
-            await _orderConfirmation.Confirm(order);
+
+            BackgroundJob.Enqueue(() => _printingService.Print(order));
+            BackgroundJob.Enqueue(() => _orderConfirmation.Confirm(order));
             return Created(Request.Path + $"/{order.Id}", order);
         }
     }

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.23" />
+    <PackageReference Include="Hangfire.Core" Version="1.7.23" />
+    <PackageReference Include="Hangfire.SqlServer" Version="1.7.23" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyStore.Business\MyStore.Business.csproj" />
+    <ProjectReference Include="..\MyStore.Scheduler\MyStore.Scheduler.csproj" />
+  </ItemGroup>
+
+</Project>

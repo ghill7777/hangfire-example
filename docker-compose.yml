@@ -1,6 +1,6 @@
 version: '3'
 services:
-    ms-sql-server:
+    sql-mystore:
         image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
         environment:
             ACCEPT_EULA: "Y"
@@ -8,3 +8,12 @@ services:
             MSSQL_PID: Express
         ports:
         - "1432:1433"
+    sql-hangfire:
+        image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+        environment:
+            ACCEPT_EULA: "Y"
+            SA_PASSWORD: "lionsNeverSleep9@"
+            MSSQL_PID: Express
+        ports:
+        - "1431:1433"
+        
